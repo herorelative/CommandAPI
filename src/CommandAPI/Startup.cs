@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using CommandAPI.Data;
 
 namespace CommandAPI
 {
@@ -17,6 +18,11 @@ namespace CommandAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
+            //AddTransient: a service is created each time it is requested from the service container
+            //AddScoped: a service is created once per client request(connectoin).
+            //AddSingleton: a service is created once and reused.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
