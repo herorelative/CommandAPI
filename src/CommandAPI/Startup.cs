@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using CommandAPI.Data;
 using Npgsql;
+using AutoMapper;
+using Newtonsoft.Json.Serialization;
 
 namespace CommandAPI
 {
@@ -31,14 +33,18 @@ namespace CommandAPI
             //Linux/OSX: ~/.microsoft/usersecrets/<user_secrets_id>/secrets.json
 
             var builder = new NpgsqlConnectionStringBuilder();
-            builder.ConnectionString = Configuration.GetConnectionString("postgreSqlConnection");
+            builder.ConnectionString = Configuration.GetConnectionString("PostgreSqlConnection");
             builder.Username = Configuration["UserID"];
             builder.Password = Configuration["Password"];
 
             services.AddDbContext<CommandContext>(opt => 
-                opt.UseNpgsql(Configuration.GetConnectionString(builder.ConnectionString)));
+                opt.UseNpgsql(builder.ConnectionString));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(s=>{
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
             //AddTransient: a service is created each time it is requested from the service container
