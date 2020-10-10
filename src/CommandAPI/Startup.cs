@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using CommandAPI.Data;
+using Npgsql;
 
 namespace CommandAPI
 {
@@ -23,12 +24,23 @@ namespace CommandAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //The Secret Manager Tool
+            //dotnet user-secrets set "UserID" "sddsf"
+            //dotnet user-secrets set "Password" "sddsf"
+            //Windows: %APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
+            //Linux/OSX: ~/.microsoft/usersecrets/<user_secrets_id>/secrets.json
+
+            var builder = new NpgsqlConnectionStringBuilder();
+            builder.ConnectionString = Configuration.GetConnectionString("postgreSqlConnection");
+            builder.Username = Configuration["UserID"];
+            builder.Password = Configuration["Password"];
+
             services.AddDbContext<CommandContext>(opt => 
-                opt.UseNpgsql(Configuration.GetConnectionString("PostgreSqlConnection")));
+                opt.UseNpgsql(Configuration.GetConnectionString(builder.ConnectionString)));
 
             services.AddControllers();
 
-            services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
+            services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
             //AddTransient: a service is created each time it is requested from the service container
             //AddScoped: a service is created once per client request(connectoin).
             //AddSingleton: a service is created once and reused.
