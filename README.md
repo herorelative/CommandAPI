@@ -1,4 +1,4 @@
-"# CommandAPI" 
+# CommandAPI 
 
 Verb | URI | Operation | Description
 ---- | --- | --------- | -----------     
@@ -9,4 +9,4 @@ PUT | /api/commands/{Id} | update (full) | update all of a single resource (by I
 PATCH | /api/commands/{Id} | update (Partial) | update part of a single resource (by Id)
 DELETE | /api/commands/{Id} | Delete | Delete a single resource (by Id)
 
-###Something from Les Jackson (Glasgow, Scotland)
+### Something from Les Jackson (Glasgow, Scotland)
