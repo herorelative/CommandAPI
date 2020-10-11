@@ -270,6 +270,7 @@ namespace CommandAPI.Tests
             //Assert
             Assert.IsType<NoContentResult>(result);
         }
+        
         // Test 6.2 Check for 404 Not Found HTTP Response
         [Fact]
         public void DeleteCommand_Returns_404NotFound_WhenNonExistentResourceIDSubmitted()
